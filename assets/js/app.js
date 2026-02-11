@@ -11,34 +11,18 @@ const $ = (sel) => document.querySelector(sel);
 
 function applyTheme() {
   const root = document.documentElement;
-  if (state.theme === 'system') {
-    root.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  } else {
-    root.dataset.theme = state.theme;
-  }
+  if (state.theme === 'system') root.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  else root.dataset.theme = state.theme;
 }
 
 function setCoins(next) {
   state.coins = next;
   localStorage.setItem('np:coins', String(next));
-  document.querySelectorAll('[data-coins]').forEach((el) => {
-    el.textContent = `${state.coins} NP`;
-  });
+  document.querySelectorAll('[data-coins]').forEach((el) => { el.textContent = `${state.coins} NP`; });
 }
 
-function spendCoins(amount = 10) {
-  if (state.coins < amount) return false;
-  setCoins(state.coins - amount);
-  return true;
-}
-
-function toast(message) {
-  const el = $('#toast');
-  if (!el) return;
-  el.textContent = message;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 1600);
-}
+function spendCoins(amount = 10) { if (state.coins < amount) return false; setCoins(state.coins - amount); return true; }
+function toast(message) { const el = $('#toast'); if (!el) return; el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1600); }
 
 function setupGlobal() {
   applyTheme();
@@ -49,55 +33,80 @@ function setupGlobal() {
   if (langSel) {
     langSel.innerHTML = languages.map(([code, name]) => `<option value="${code}">${name}</option>`).join('');
     langSel.value = state.lang;
-    langSel.addEventListener('change', () => {
-      state.lang = langSel.value;
-      localStorage.setItem('np:lang', state.lang);
-      location.reload();
-    });
+    langSel.addEventListener('change', () => { state.lang = langSel.value; localStorage.setItem('np:lang', state.lang); location.reload(); });
   }
 
   const themeSel = $('#theme');
   if (themeSel) {
     themeSel.value = state.theme;
-    themeSel.addEventListener('change', () => {
-      state.theme = themeSel.value;
-      localStorage.setItem('np:theme', state.theme);
-      applyTheme();
-    });
+    themeSel.addEventListener('change', () => { state.theme = themeSel.value; localStorage.setItem('np:theme', state.theme); applyTheme(); });
   }
 
-  document.querySelectorAll('[data-i18n]').forEach((el) => {
-    el.textContent = t(state.lang, el.dataset.i18n);
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-    el.placeholder = t(state.lang, el.dataset.i18nPlaceholder);
-  });
-
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(state.lang, el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => { el.placeholder = t(state.lang, el.dataset.i18nPlaceholder); });
   setCoins(state.coins);
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('show'));
-  }, { threshold: 0.1 });
+  const io = new IntersectionObserver((entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('show')), { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  $('#searchFocusBtn')?.addEventListener('click', () => $('#search')?.focus());
+  $('#menuToggle')?.addEventListener('click', () => $('#mobileDrawer')?.classList.add('open'));
+  $('#drawerBackdrop')?.addEventListener('click', () => $('#mobileDrawer')?.classList.remove('open'));
+}
+
+function sortedTools(query) {
+  const q = (query || '').toLowerCase();
+  const ids = JSON.parse(localStorage.getItem('np:toolOrder') || '[]');
+  const byId = Object.fromEntries(tools.map((t) => [t.id, t]));
+  const ordered = [...ids.filter((id) => byId[id]).map((id) => byId[id]), ...tools.filter((t) => !ids.includes(t.id))];
+  return ordered.filter((tool) => `${tool.title} ${tool.description}`.toLowerCase().includes(q));
+}
+
+function saveCurrentOrder() {
+  const ids = [...document.querySelectorAll('#toolGrid .card[data-id]')].map((el) => el.dataset.id);
+  localStorage.setItem('np:toolOrder', JSON.stringify(ids));
+}
+
+function wireDragAndDrop() {
+  const grid = $('#toolGrid');
+  if (!grid) return;
+  let dragging = null;
+  grid.querySelectorAll('.card').forEach((card) => {
+    card.draggable = true;
+    card.addEventListener('dragstart', () => { dragging = card; card.classList.add('dragging'); });
+    card.addEventListener('dragend', () => { card.classList.remove('dragging'); saveCurrentOrder(); dragging = null; });
+  });
+  grid.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('.card');
+    if (!target || !dragging || target === dragging) return;
+    const rect = target.getBoundingClientRect();
+    const after = e.clientY > rect.top + rect.height / 2;
+    if (after) target.after(dragging); else target.before(dragging);
+  });
+}
+
+function renderMegaTools() {
+  const mega = $('#megaTools');
+  if (!mega) return;
+  mega.innerHTML = tools.slice(0, 20).map((tool) => `<a href="tools/${tool.id}.html">${tool.icon}<span>${tool.title}</span></a>`).join('');
 }
 
 function renderCards() {
   const grid = $('#toolGrid');
   if (!grid) return;
   const q = ($('#search')?.value || '').toLowerCase();
-  grid.innerHTML = tools
-    .filter((tool) => `${tool.title} ${tool.description}`.toLowerCase().includes(q))
-    .map((tool) => `
-      <article class="card reveal">
-        ${tool.icon}
-        <span class="badge">${tool.category}</span>
-        <h3>${tool.title}</h3>
-        <p>${tool.description}</p>
-        <a class="btn" href="tools/${tool.id}.html">${t(state.lang, 'useTool')}</a>
-      </article>
-    `).join('');
+  grid.innerHTML = sortedTools(q).map((tool) => `
+    <article class="card reveal" data-id="${tool.id}">
+      ${tool.icon}
+      <span class="badge">${tool.category}</span>
+      <h3>${tool.title}</h3>
+      <p>${tool.description}</p>
+      <p class="drag-hint">↕ Drag to reorder</p>
+      <a class="btn" href="tools/${tool.id}.html">${t(state.lang, 'useTool')}</a>
+    </article>`).join('');
+  wireDragAndDrop();
 }
-
 function downloadBlob(blob, filename) {
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -700,8 +709,10 @@ function setupToolPage() {
 
 window.addEventListener('DOMContentLoaded', () => {
   setupGlobal();
+  renderMegaTools();
   renderCards();
   $('#search')?.addEventListener('input', renderCards);
+  $('#resetOrder')?.addEventListener('click', () => { localStorage.removeItem('np:toolOrder'); renderCards(); toast('Layout reset done.'); });
   setupToolPage();
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 });

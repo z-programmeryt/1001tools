@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Premium Tools Platform - Free Online Tools | NovaTools</title>
-  <meta name="description" content="Use premium, lightning-fast online tools with world-class UI, global language support, and privacy-first client-side processing." />
-  <meta property="og:title" content="Premium Tools Platform | NovaTools" />
-  <meta property="og:description" content="Animated, SEO-optimized tools platform built with custom source code." />
+  <title>NovaTools - Premium AI & Utility Tools Platform</title>
+  <meta name="description" content="NovaTools is a premium animated tools platform with fast client-side utilities, beautiful UI, and SEO-ready pages." />
+  <meta property="og:title" content="NovaTools - Premium Tools Platform" />
+  <meta property="og:description" content="Fast, animated, SEO-focused tool platform for global users." />
   <meta property="og:type" content="website" />
   <link rel="canonical" href="https://example.com/en/" />
   <link rel="stylesheet" href="assets/css/styles.css" />
@@ -15,45 +15,63 @@
 <body>
 <header>
   <div class="container topbar">
-    <div class="brand">NovaTools</div>
-    <nav class="nav" aria-label="Main navigation">
-      <a href="index.html" data-i18n="navHome">Home</a>
-      <a href="#toolGrid" data-i18n="navTools">Tools</a>
-      <a href="#todo" data-i18n="navPricing">Pricing</a>
-      <a href="#todo" data-i18n="navAbout">About</a>
+    <button id="menuToggle" class="icon-btn mobile-only" aria-label="Open menu">☰</button>
+    <a class="brand" href="index.html">NovaTools</a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <div class="nav-dropdown" id="allToolsDropdown">
+        <button class="nav-trigger" type="button">All Tools ▾</button>
+        <div class="mega" id="megaTools"></div>
+      </div>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="learn.html">Learn</a>
+      <a href="courses.html">Courses</a>
     </nav>
-    <div class="nav">
-      <span data-coins>100 NP</span>
-      <select id="language" aria-label="Language"></select>
+
+    <div class="header-actions">
+      <button id="searchFocusBtn" class="icon-btn" aria-label="Search">🔎</button>
       <select id="theme" aria-label="Theme"><option value="light">🌞</option><option value="dark">🌙</option><option value="system">💻</option></select>
+      <button class="icon-btn" aria-label="Login">👤</button>
+      <span class="coins" data-coins>100 NP</span>
+      <select id="language" aria-label="Language"></select>
     </div>
   </div>
 </header>
+
+<aside id="mobileDrawer" class="mobile-drawer" aria-hidden="true">
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <nav class="drawer-panel">
+    <a href="index.html">🏠 Home</a>
+    <a href="#toolGrid">🧰 All Tools</a>
+    <a href="blog.html">📝 Blog</a>
+    <a href="about.html">ℹ️ About</a>
+    <a href="contact.html">✉️ Contact</a>
+    <a href="learn.html">📘 Learn</a>
+    <a href="courses.html">🎓 Courses</a>
+  </nav>
+</aside>
+
 <main class="container">
   <section class="hero reveal">
     <h1 data-i18n="heroTitle">Premium Global Tools Platform</h1>
     <p data-i18n="heroSubtitle">Lightning-fast, beautifully animated, privacy-first tools built with custom code.</p>
   </section>
+
   <section class="search-wrap reveal">
     <input id="search" class="search" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search tools..." />
+    <button id="resetOrder" class="btn" type="button">Reset Layout</button>
   </section>
 
-  <section id="todo" class="todo reveal">
-    <h2 data-i18n="todoTitle">Execution Roadmap</h2>
-    <ol>
-      <li>Build premium core shell: animated header/footer, theme, i18n, coin system, SEO scaffolding.</li>
-      <li>Launch first 5 critical text tools: Word Counter, Case Converter, Lorem Ipsum, Text-to-Speech, Speech-to-Text.</li>
-      <li>Browser-test all first 5 tools and refine UX/performance.</li>
-      <li>Launch next 5 advanced text tools: Rewriter, Grammar Checker, Fancy Text, Diff Checker, Emoji Picker. ✅</li>
-      <li>Complete image tools 16-20: Color Picker, Watermark, Screenshot→Code, QR Generator, Barcode Generator. ✅</li>
-    </ol>
-  </section>
-
-  <section id="toolGrid" class="card-grid"></section>
+  <section id="toolGrid" class="card-grid" aria-label="All tools"></section>
 </main>
+
 <footer>
-  <div class="container">
-    <p>© 2026 NovaTools • Premium animated tools platform • WCAG-friendly • SEO-ready</p>
+  <div class="container footer-grid">
+    <p>© 2026 NovaTools • Animated • Fast • SEO-ready</p>
+    <p>Built for global users with responsive, premium UX.</p>
   </div>
 </footer>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
