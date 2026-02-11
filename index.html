@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Premium Tools Platform - Free Online Tools | NovaTools</title>
+  <meta name="description" content="Use premium, lightning-fast online tools with world-class UI, global language support, and privacy-first client-side processing." />
+  <meta property="og:title" content="Premium Tools Platform | NovaTools" />
+  <meta property="og:description" content="Animated, SEO-optimized tools platform built with custom source code." />
+  <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://example.com/en/" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"NovaTools","url":"https://example.com","potentialAction":{"@type":"SearchAction","target":"https://example.com/en/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+</head>
+<body>
+<header>
+  <div class="container topbar">
+    <div class="brand">NovaTools</div>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html" data-i18n="navHome">Home</a>
+      <a href="#toolGrid" data-i18n="navTools">Tools</a>
+      <a href="#todo" data-i18n="navPricing">Pricing</a>
+      <a href="#todo" data-i18n="navAbout">About</a>
+    </nav>
+    <div class="nav">
+      <span data-coins>100 NP</span>
+      <select id="language" aria-label="Language"></select>
+      <select id="theme" aria-label="Theme"><option value="light">🌞</option><option value="dark">🌙</option><option value="system">💻</option></select>
+    </div>
+  </div>
+</header>
+<main class="container">
+  <section class="hero reveal">
+    <h1 data-i18n="heroTitle">Premium Global Tools Platform</h1>
+    <p data-i18n="heroSubtitle">Lightning-fast, beautifully animated, privacy-first tools built with custom code.</p>
+  </section>
+  <section class="search-wrap reveal">
+    <input id="search" class="search" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search tools..." />
+  </section>
+
+  <section id="todo" class="todo reveal">
+    <h2 data-i18n="todoTitle">Execution Roadmap</h2>
+    <ol>
+      <li>Build premium core shell: animated header/footer, theme, i18n, coin system, SEO scaffolding.</li>
+      <li>Launch first 5 critical text tools: Word Counter, Case Converter, Lorem Ipsum, Text-to-Speech, Speech-to-Text.</li>
+      <li>Browser-test all first 5 tools and refine UX/performance.</li>
+      <li>Launch next 5 advanced text tools: Rewriter, Grammar Checker, Fancy Text, Diff Checker, Emoji Picker. ✅</li>
+      <li>Complete image tools 16-20: Color Picker, Watermark, Screenshot→Code, QR Generator, Barcode Generator. ✅</li>
+    </ol>
+  </section>
+
+  <section id="toolGrid" class="card-grid"></section>
+</main>
+<footer>
+  <div class="container">
+    <p>© 2026 NovaTools • Premium animated tools platform • WCAG-friendly • SEO-ready</p>
+  </div>
+</footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
